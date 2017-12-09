@@ -15,6 +15,7 @@ func main() {
 	garbageMode := false
 	scoreAmount := 0
 	scoreSum := 0
+	garbageCount := 0
 	for i := 0; i < len(content); i++ {
 		v := content[i]
 		fmt.Println(string(v))
@@ -22,10 +23,15 @@ func main() {
 		switch v {
 		case '!':
 			i++
+			continue
 		case '<':
-			garbageMode = true
+			if garbageMode == false {
+				garbageMode = true
+				continue
+			}
 		case '>':
 			garbageMode = false
+			continue
 		case '{':
 			if garbageMode == false {
 				openGroupsCount++
@@ -37,10 +43,13 @@ func main() {
 				scoreSum += scoreAmount
 				scoreAmount--
 			}
+		}
 
+		if garbageMode {
+			garbageCount++
 		}
 	}
 
 	fmt.Println(scoreSum)
-	fmt.Println(openGroupsCount)
+	fmt.Println(garbageCount)
 }
