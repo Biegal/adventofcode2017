@@ -17,7 +17,7 @@ func main() {
 
 	x := 0.0
 	y := 0.0
-
+	furtherDistance := 0.0
 	for _, move := range moves {
 
 		switch move {
@@ -38,8 +38,17 @@ func main() {
 			y--
 			x--
 		}
+
+		currentDistance := CalculateDistance(x, y)
+		if currentDistance > furtherDistance {
+			furtherDistance = currentDistance
+		}
 	}
 
+	fmt.Println(furtherDistance)
+}
+
+func CalculateDistance(x float64, y float64) float64 {
 	stps := 0.0
 	x = math.Abs(x)
 	y = math.Abs(y)
@@ -48,5 +57,5 @@ func main() {
 	} else {
 		stps = x + ((y - x) / 2)
 	}
-	fmt.Println(stps)
+	return stps
 }
