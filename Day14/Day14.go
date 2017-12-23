@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -11,35 +12,45 @@ func main() {
 	input := "xlqgujun"
 
 	rows := [128]string{}
+	memGrid := [128][128]int{}
 
 	for i := 0; i < 128; i++ {
 		rows[i] = calculateHash(input + "-" + strconv.Itoa(i))
 	}
 
-	usedBlocks := 0
-	for _, v := range rows {
-		fmt.Println(v)
+	// usedBlocks := 0
+	for i, v := range rows {
 
 		binString := ""
 		for _, hex := range v {
 			hexString := "0" + string(hex)
 			val, _ := strconv.ParseInt(hexString, 16, 0)
-			binString += Hex2Bin(byte(val))
+			asBin := Hex2Bin(byte(val))
+			binString += LeftPad2Len(asBin, "0", 4)
 		}
 
-		fmt.Println(len(binString))
-		for _, b := range binString {
+		for j, b := range binString {
 			if b == '1' {
-				usedBlocks++
+				memGrid[i][j] = 1
+			} else {
+				memGrid[i][j] = 0
 			}
 		}
 	}
 
-	fmt.Println(usedBlocks)
+	for _, row := range memGrid {
+		fmt.Println(row)
+	}
+}
+
+func LeftPad2Len(s string, padStr string, overallLen int) string {
+	var padCountInt int
+	padCountInt = 1 + ((overallLen - len(padStr)) / len(padStr))
+	var retStr = strings.Repeat(padStr, padCountInt) + s
+	return retStr[(len(retStr) - overallLen):]
 }
 
 func Hex2Bin(in byte) string {
-	fmt.Println(in)
 	var out []byte
 	for i := 7; i >= 0; i-- {
 		b := (in >> uint(i))
