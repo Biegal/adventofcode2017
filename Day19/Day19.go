@@ -29,6 +29,7 @@ func main() {
 	x := strings.Index(lines[0], "|")
 	y := 0
 
+	steps := 0
 	direction := 'D'
 	word := make([]rune, 0)
 	current_element := '|'
@@ -40,15 +41,18 @@ func main() {
 
 		if direction == 'D' {
 			y += 1
-
+			steps++
 		} else if direction == 'U' {
 			y -= 1
-
+			steps++
 		} else if direction == 'L' {
 			x -= 1
+			steps++
 		} else if direction == 'R' {
 			x += 1
+			steps++
 		}
+
 		current_element = rune(lines[y][x])
 		if current_element == '+' {
 			if direction == 'D' || direction == 'U' {
@@ -72,4 +76,6 @@ func main() {
 	for _, v := range word {
 		fmt.Print(string(v))
 	}
+	fmt.Println()
+	fmt.Println(steps)
 }
