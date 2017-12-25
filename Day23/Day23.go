@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
-	"strings"
 )
 
 type Program struct {
@@ -35,83 +33,24 @@ func main() {
 		lines = append(lines, line)
 	}
 
-	program0 := Program{}
-	program0.Lines = lines
-	program0.Pid = 0
-	program0.Register = map[string]int64{}
-
-	processOperations(&program0)
-}
-
-func processOperations(prg *Program) {
-	register := prg.Register
-	mulCounter := 0
-	for {
-		if prg.Idx < 0 || prg.Idx >= int64(len(prg.Lines)) {
-			break
+	b := 105700
+	c := 105700 + 17000
+	counter := 0
+	for num := b; num <= c; num += 17 {
+		if !IsPrime(num) {
+			counter++
 		}
+	}
 
-		currentOperation := prg.Lines[prg.Idx]
-		fmt.Println(currentOperation)
+	fmt.Println(counter)
+}
 
-		splitted := strings.Split(currentOperation, " ")
-
-		switch splitted[0] {
-		case "set":
-			{
-				register[splitted[1]] = GetParameter(register, splitted[2])
-			}
-		case "sub":
-			{
-				CheckRegister(register, splitted[1])
-				parameter := GetParameter(register, splitted[2])
-				register[splitted[1]] -= parameter
-			}
-		case "mul":
-			{
-				CheckRegister(register, splitted[1])
-				parameter := GetParameter(register, splitted[2])
-				register[splitted[1]] *= parameter
-				mulCounter++
-				fmt.Println(mulCounter)
-			}
-		case "jnz":
-			{
-				value := int64(0)
-				parseVal, err := strconv.ParseInt(splitted[1], 10, 64)
-
-				if err == nil {
-					value = parseVal
-				} else {
-					CheckRegister(register, splitted[1])
-					value = register[splitted[1]]
-				}
-
-				if value != 0 {
-					offset := GetParameter(register, splitted[2])
-					prg.Idx += offset
-					continue
-				}
-			}
+func IsPrime(number int) bool {
+	for i := 2; i*i <= number; i++ {
+		if number%i == 0 {
+			return false
 		}
-
-		prg.Idx++
-	}
-}
-
-func CheckRegister(register map[string]int64, name string) {
-	_, exist := register[name]
-	if !exist {
-		register[name] = 0
-	}
-}
-
-func GetParameter(register map[string]int64, paramValue string) int64 {
-	val, err := strconv.ParseInt(paramValue, 10, 64)
-
-	if err == nil {
-		return val
 	}
 
-	return register[paramValue]
+	return true
 }
